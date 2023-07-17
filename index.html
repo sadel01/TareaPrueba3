@@ -25,38 +25,105 @@
       border: 1px solid black;
       text-align: center;
       font-size: 20px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <div class="menu">
-    <h1>Selecciona una dificultad</h1>
-    <button onclick="crearTablero(9)">Principiante (9x9)</button>
-    <button onclick="crearTablero(16)">Intermedio (16x16)</button>
-    <button onclick="crearTablero(32)">Avanzado (32x32)</button>
+  <h1 id="welcomeText">Bienvenido al juego</h1>
+  
+  <div id="startMenu">
+    <button id="startButton" onclick="iniciarJuego()">Iniciar</button>
+  </div>
+  
+  <div id="gameMenu" style="display: none;">
+    <div class="menu">
+      <h1>Selecciona una dificultad</h1>
+      <button onclick="crearTablero(9)">Principiante (9x9)</button>
+      <button onclick="crearTablero(16)">Intermedio (16x16)</button>
+      <button onclick="crearTablero(32)">Avanzado (32x32)</button>
+    </div>
   </div>
 
   <table id="board" style="display: none;"></table>
 
   <script>
+    var juegoIniciado = false; // Variable para controlar si el juego ha sido iniciado
+    var board = document.getElementById('board'); // Referencia al elemento de la tabla
+    var restartButton; // Variable para almacenar la referencia al botón "Reiniciar"
+  
+    // Función para mostrar el menú de selección de dificultad
+    function mostrarMenu() {
+      document.getElementById('startMenu').style.display = 'none';
+      document.getElementById('gameMenu').style.display = 'block';
+    }
+
+    // Función para iniciar el juego
+    function iniciarJuego() {
+      document.getElementById('welcomeText').style.display = 'none';
+      mostrarMenu();
+    }
+    
+    // Función para reiniciar el juego
+    function reiniciarJuego() {
+      // Aquí puedes agregar la lógica para reiniciar tu juego
+      juegoIniciado = false; // Establece el juego como no iniciado
+      board.innerHTML = ''; // Elimina el contenido del tablero
+      board.style.display = 'none'; // Oculta el tablero
+      restartButton.style.display = 'none'; // Oculta el botón "Reiniciar"
+      mostrarMenu(); // Vuelve a mostrar el menú de selección de dificultad
+    }
+
+    // Función para mostrar el botón "Reiniciar"
+    function mostrarReinicio() {
+      restartButton.style.display = 'inline-block';
+    }
+
+    // Función para ocultar el botón "Reiniciar"
+    function ocultarReinicio() {
+      restartButton.style.display = 'none';
+    }
+    
+    // Obtener los elementos de los botones por su ID
+    var startButton = document.getElementById("startButton");
+    var restartButton = document.getElementById("restartButton");
+    
+    // Agregar los controladores de eventos a los botones
+    startButton.addEventListener("click", iniciarJuego);
+    restartButton.addEventListener("click", reiniciarJuego);
+  
     function crearTablero(tamaño) {
       // Oculta el menú y muestra el tablero
-      document.querySelector('.menu').style.display = 'none';
-      document.getElementById('board').style.display = 'table';
-
-      // Obtén una referencia al elemento de la tabla
-      var board = document.getElementById('board');
+      document.getElementById('gameMenu').style.display = 'none';
+      board.style.display = 'table';
 
       // Genera el tablero del tamaño especificado
       for (var i = 0; i < tamaño; i++) {
         var row = document.createElement('tr');
         for (var j = 0; j < tamaño; j++) {
           var cell = document.createElement('td');
+          // Agrega un controlador de eventos a cada celda
+          cell.addEventListener('click', function() {
+            // Aquí puedes agregar la lógica del juego al hacer clic en las celdas del tablero
+          });
           row.appendChild(cell);
         }
         board.appendChild(row);
       }
+
+      restartButton = document.createElement('button');
+      restartButton.textContent = 'Reiniciar';
+      restartButton.addEventListener('click', reiniciarJuego);
+      board.parentNode.insertBefore(restartButton, board.nextSibling);
+      mostrarReinicio(); // Muestra el botón "Reiniciar"
     }
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
