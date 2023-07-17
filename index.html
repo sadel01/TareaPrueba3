@@ -27,6 +27,22 @@
       font-size: 20px;
       cursor: pointer;
     }
+
+    /* Estilo para el botón bloqueado */
+    .blocked {
+      background-color: yellow;
+      position: relative;
+    }
+
+    /* Estilo para el emoji de bandera */
+    .blocked::before {
+      content: "😷";
+      font-size: 20px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
   </style>
 </head>
 <body>
@@ -73,6 +89,17 @@
               }
             }
           };
+          cell.oncontextmenu = function(e) {
+            e.preventDefault(); // Evita que aparezca el menú contextual al hacer clic derecho
+            if (!juegoActivo) return;
+
+            // Cambia el estado bloqueado/desbloqueado del botón de casilla
+            if (this.classList.contains('blocked')) {
+              desbloquearCasilla(this);
+            } else {
+              bloquearCasilla(this);
+            }
+          };
           fila.push({ element: cell, isMine: false, count: 0 });
           row.appendChild(cell);
         }
@@ -114,20 +141,30 @@
       function revelarCasillasAdyacentes(row, col) {
         for (var p = Math.max(0, row - 1); p <= Math.min(row + 1, tamaño - 1); p++) {
           for (var q = Math.max(0, col - 1); q <= Math.min(col + 1, tamaño - 1); q++) {
-           var cell = tablero[p][q].element;
-           if (!cell.classList.contains('revealed')) {
-            cell.textContent = tablero[p][q].count;
-            cell.classList.add('revealed');
-            if (tablero[p][q].count === 0) {
-            // Si el número de minas adyacentes es cero, revela las casillas adyacentes recursivamente
-              revelarCasillasAdyacentes(p, q);
+            var cell = tablero[p][q].element;
+            if (!cell.classList.contains('revealed')) {
+              cell.textContent = tablero[p][q].count;
+              cell.classList.add('revealed');
+              if (tablero[p][q].count === 0) {
+                // Si el número de minas adyacentes es cero, revela las casillas adyacentes recursivamente
+                revelarCasillasAdyacentes(p, q);
+              }
             }
           }
         }
       }
+
+      function bloquearCasilla(cell) {
+        cell.classList.add('blocked');
+        cell.originalOnClick = cell.onclick; // Almacena el evento onclick original
+        cell.onclick = null; // Deshabilita el evento onclick
+      }
+
+      function desbloquearCasilla(cell) {
+        cell.classList.remove('blocked');
+        cell.onclick = cell.originalOnClick; // Restaura el evento onclick original
+      }
     }
-  }
   </script>
 </body>
 </html>
-
