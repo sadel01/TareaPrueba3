@@ -126,8 +126,11 @@
             var col = this.cellIndex;
             if (tablero[row][col].isMine) {
               // Has hecho clic en una mina, fin del juego
-              alert('Has perdido');
+              alert('¡Entraste en cuarentena!');
               juegoActivo = false;
+              // Mostrar emoji en casilla con mina
+              this.innerHTML = '&#x1F9A0';
+              this.style.background = 'red';
             } else {
               // No es una mina, muestra el número de minas adyacentes
               this.textContent = tablero[row][col].count;
@@ -219,48 +222,7 @@
       restartButton.addEventListener('click', reiniciarJuego);
       board.parentNode.insertBefore(restartButton, board.nextSibling);
       mostrarReinicio(); // Muestra el botón "Reiniciar"
-
-      generarTableroPuntuaciones();
-    }
-
-
-    function generarTableroPuntuaciones() {
-
-      var tablaPuntuaciones = document.getElementById('tablaPuntuaciones');
-
-      if (!tablaPuntuaciones.getElementsByTagName('table').length) {
-        var tablero = document.createElement('table');
-        tablaPuntuaciones.appendChild(tablero);
-      }
-
-
-      var tablas = tablaPuntuaciones.getElementsByTagName('table')[0];
-
-      var fila = document.createElement('tr');
-
-      var celdaJugador = document.createElement('td');
-      celdaJugador.innerText = "Jugador";
-
-
-      var celdaPuntuacion = document.createElement('td');
-      celdaPuntuacion.innerText = "Puntuacion";
-
-      fila.appendChild(celdaJugador);
-      fila.appendChild(celdaPuntuacion);
-
-      tablas.appendChild(fila);
     }
   </script>
-
-  <div id="tablaPuntuaciones" style="margin-top: 40px"></div>
-
-
 </body>
 </html>
-
-
-
-
-
-
-
