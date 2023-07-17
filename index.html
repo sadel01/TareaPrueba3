@@ -56,7 +56,41 @@
         }
         board.appendChild(row);
       }
+
+      generarTableroPuntuaciones()
+    }
+
+
+    function generarTableroPuntuaciones() {
+
+      var tablaPuntuaciones = document.getElementById('tablaPuntuaciones');
+
+      if (!tablaPuntuaciones.getElementsByTagName('table').length) {
+        var tablero = document.createElement('table');
+        tablaPuntuaciones.appendChild(tablero);
+      }
+
+
+      var tablas = tablaPuntuaciones.getElementsByTagName('table')[0];
+
+      var fila = document.createElement('tr');
+
+      var celdaJugador = document.createElement('td');
+      celdaJugador.innerText = "Jugador";
+
+
+      var celdaPuntuacion = document.createElement('td');
+      celdaPuntuacion.innerText = "Puntuacion";
+
+      fila.appendChild(celdaJugador);
+      fila.appendChild(celdaPuntuacion);
+
+      tablas.appendChild(fila);
     }
   </script>
+
+  <div id="tablaPuntuaciones" style="margin-top: 40px"></div>
+
+
 </body>
 </html>
