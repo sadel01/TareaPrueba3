@@ -2,7 +2,6 @@
 <html>
 <head>
   <style>
-    /* Estilos para el menú */
     .menu {
       text-align: center;
     }
@@ -12,8 +11,6 @@
       padding: 10px 20px;
       font-size: 18px;
     }
-
-    /* Estilos para el tablero de juego */
     table {
       margin: 0 auto;
       border-collapse: collapse;
@@ -28,13 +25,11 @@
       cursor: pointer;
     }
 
-    /* Estilo para el botón bloqueado */
     .blocked {
       background-color: yellow;
       position: relative;
     }
 
-    /* Estilo para el emoji de bandera */
     .blocked::before {
       content: "😷";
       font-size: 20px;
@@ -64,56 +59,56 @@
   <table id="board" style="display: none;"></table>
 
   <script>
-    var juegoIniciado = false; // Variable para controlar si el juego ha sido iniciado
-    var board = document.getElementById('board'); // Referencia al elemento de la tabla
-    var restartButton; // Variable para almacenar la referencia al botón "Reiniciar"
+    var juegoIniciado = false;
+    var board = document.getElementById('board'); 
+    var restartButton; 
   
-    // Función para mostrar el menú de selección de dificultad
+  
     function mostrarMenu() {
       document.getElementById('startMenu').style.display = 'none';
       document.getElementById('gameMenu').style.display = 'block';
     }
 
-    // Función para iniciar el juego
+   
     function iniciarJuego() {
       document.getElementById('welcomeText').style.display = 'none';
       mostrarMenu();
     }
     
-    // Función para reiniciar el juego
+    
     function reiniciarJuego() {
-      // Aquí puedes agregar la lógica para reiniciar tu juego
-      juegoIniciado = false; // Establece el juego como no iniciado
-      board.innerHTML = ''; // Elimina el contenido del tablero
-      board.style.display = 'none'; // Oculta el tablero
-      restartButton.style.display = 'none'; // Oculta el botón "Reiniciar"
-      mostrarMenu(); // Vuelve a mostrar el menú de selección de dificultad
+    
+      juegoIniciado = false; 
+      board.innerHTML = ''; 
+      board.style.display = 'none'; 
+      restartButton.style.display = 'none'; 
+      mostrarMenu(); 
     }
 
-    // Función para mostrar el botón "Reiniciar"
+    
     function mostrarReinicio() {
       restartButton.style.display = 'inline-block';
     }
 
-    // Función para ocultar el botón "Reiniciar"
+    
     function ocultarReinicio() {
       restartButton.style.display = 'none';
     }
     
-    // Obtener los elementos de los botones por su ID
+   
     var startButton = document.getElementById("startButton");
     var restartButton = document.getElementById("restartButton");
     
-    // Agregar los controladores de eventos a los botones
+    
     startButton.addEventListener("click", iniciarJuego);
     restartButton.addEventListener("click", reiniciarJuego);
   
     function crearTablero(tamaño) {
-      // Oculta el menú y muestra el tablero
+      
       document.getElementById('gameMenu').style.display = 'none';
       board.style.display = 'table';
 
-      // Genera el tablero del tamaño especificado
+    
       var tablero = [];
       for (var i = 0; i < tamaño; i++) {
         var row = document.createElement('tr');
@@ -125,27 +120,21 @@
             var row = this.parentNode.rowIndex;
             var col = this.cellIndex;
             if (tablero[row][col].isMine) {
-              // Has hecho clic en una mina, fin del juego
               alert('¡Entraste en cuarentena!');
               juegoActivo = false;
-              // Mostrar emoji en casilla con mina
               this.innerHTML = '&#x1F9A0';
               this.style.background = 'red';
             } else {
-              // No es una mina, muestra el número de minas adyacentes
               this.textContent = tablero[row][col].count;
               this.classList.add('revealed');
               if (tablero[row][col].count === 0) {
-                // Si el número de minas adyacentes es cero, revela las casillas adyacentes
                 revelarCasillasAdyacentes(row, col);
               }
             }
           };
           cell.oncontextmenu = function(e) {
-            e.preventDefault(); // Evita que aparezca el menú contextual al hacer clic derecho
+            e.preventDefault();
             if (!juegoActivo) return;
-
-            // Cambia el estado bloqueado/desbloqueado del botón de casilla
             if (this.classList.contains('blocked')) {
               desbloquearCasilla(this);
             } else {
@@ -158,9 +147,7 @@
         tablero.push(fila);
         board.appendChild(row);
       }
-
-      // Coloca minas aleatoriamente en el tablero
-      var numMinas = Math.floor(tamaño * tamaño * 0.15); // Aproximadamente el 15% del total
+      var numMinas = Math.floor(tamaño * tamaño * 0.15); 
       for (var k = 0; k < numMinas; k++) {
         var randomRow = Math.floor(Math.random() * tamaño);
         var randomCol = Math.floor(Math.random() * tamaño);
@@ -171,7 +158,6 @@
         }
       }
 
-      // Calcula los números de minas adyacentes
       for (var m = 0; m < tamaño; m++) {
         for (var n = 0; n < tamaño; n++) {
           if (!tablero[m][n].isMine) {
@@ -198,7 +184,6 @@
               cell.textContent = tablero[p][q].count;
               cell.classList.add('revealed');
               if (tablero[p][q].count === 0) {
-                // Si el número de minas adyacentes es cero, revela las casillas adyacentes recursivamente
                 revelarCasillasAdyacentes(p, q);
               }
             }
@@ -208,20 +193,20 @@
 
       function bloquearCasilla(cell) {
         cell.classList.add('blocked');
-        cell.originalOnClick = cell.onclick; // Almacena el evento onclick original
-        cell.onclick = null; // Deshabilita el evento onclick
+        cell.originalOnClick = cell.onclick; 
+        cell.onclick = null; 
       }
 
       function desbloquearCasilla(cell) {
         cell.classList.remove('blocked');
-        cell.onclick = cell.originalOnClick; // Restaura el evento onclick original
+        cell.onclick = cell.originalOnClick; 
       }
 
       restartButton = document.createElement('button');
       restartButton.textContent = 'Reiniciar';
       restartButton.addEventListener('click', reiniciarJuego);
       board.parentNode.insertBefore(restartButton, board.nextSibling);
-      mostrarReinicio(); // Muestra el botón "Reiniciar"
+      mostrarReinicio(); 
     }
   </script>
 </body>
