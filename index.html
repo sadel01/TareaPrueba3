@@ -25,6 +25,7 @@
       border: 1px solid black;
       text-align: center;
       font-size: 20px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -48,15 +49,85 @@
       var board = document.getElementById('board');
 
       // Genera el tablero del tamaño especificado
+      var tablero = [];
       for (var i = 0; i < tamaño; i++) {
         var row = document.createElement('tr');
+        var fila = [];
         for (var j = 0; j < tamaño; j++) {
           var cell = document.createElement('td');
+          cell.onclick = function() {
+            if (!juegoActivo) return;
+            var row = this.parentNode.rowIndex;
+            var col = this.cellIndex;
+            if (tablero[row][col].isMine) {
+              // Has hecho clic en una mina, fin del juego
+              alert('Has perdido');
+              juegoActivo = false;
+            } else {
+              // No es una mina, muestra el número de minas adyacentes
+              this.textContent = tablero[row][col].count;
+              this.classList.add('revealed');
+              if (tablero[row][col].count === 0) {
+                // Si el número de minas adyacentes es cero, revela las casillas adyacentes
+                revelarCasillasAdyacentes(row, col);
+              }
+            }
+          };
+          fila.push({ element: cell, isMine: false, count: 0 });
           row.appendChild(cell);
         }
+        tablero.push(fila);
         board.appendChild(row);
       }
+
+      // Coloca minas aleatoriamente en el tablero
+      var numMinas = Math.floor(tamaño * tamaño * 0.15); // Aproximadamente el 15% del total
+      for (var k = 0; k < numMinas; k++) {
+        var randomRow = Math.floor(Math.random() * tamaño);
+        var randomCol = Math.floor(Math.random() * tamaño);
+        if (!tablero[randomRow][randomCol].isMine) {
+          tablero[randomRow][randomCol].isMine = true;
+        } else {
+          k--;
+        }
+      }
+
+      // Calcula los números de minas adyacentes
+      for (var m = 0; m < tamaño; m++) {
+        for (var n = 0; n < tamaño; n++) {
+          if (!tablero[m][n].isMine) {
+            var count = 0;
+            for (var p = Math.max(0, m - 1); p <= Math.min(m + 1, tamaño - 1); p++) {
+              for (var q = Math.max(0, n - 1); q <= Math.min(n + 1, tamaño - 1); q++) {
+                if (tablero[p][q].isMine) {
+                  count++;
+                }
+              }
+            }
+            tablero[m][n].count = count;
+          }
+        }
+      }
+
+      var juegoActivo = true;
+
+      function revelarCasillasAdyacentes(row, col) {
+        for (var p = Math.max(0, row - 1); p <= Math.min(row + 1, tamaño - 1); p++) {
+          for (var q = Math.max(0, col - 1); q <= Math.min(col + 1, tamaño - 1); q++) {
+           var cell = tablero[p][q].element;
+           if (!cell.classList.contains('revealed')) {
+            cell.textContent = tablero[p][q].count;
+            cell.classList.add('revealed');
+            if (tablero[p][q].count === 0) {
+            // Si el número de minas adyacentes es cero, revela las casillas adyacentes recursivamente
+              revelarCasillasAdyacentes(p, q);
+            }
+          }
+        }
+      }
     }
+  }
   </script>
 </body>
 </html>
+
