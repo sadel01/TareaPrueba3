@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* Estilos para el menú */
+    .menu {
+      text-align: center;
+    }
+
+    .menu button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 18px;
+    }
+
+    /* Estilos para el tablero de juego */
+    table {
+      margin: 0 auto;
+      border-collapse: collapse;
+    }
+
+    td {
+      width: 30px;
+      height: 30px;
+      border: 1px solid black;
+      text-align: center;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="menu">
+    <h1>Selecciona una dificultad</h1>
+    <button onclick="crearTablero(9)">Principiante (9x9)</button>
+    <button onclick="crearTablero(16)">Intermedio (16x16)</button>
+    <button onclick="crearTablero(32)">Avanzado (32x32)</button>
+  </div>
+
+  <table id="board" style="display: none;"></table>
+
+  <script>
+    function crearTablero(tamaño) {
+      // Oculta el menú y muestra el tablero
+      document.querySelector('.menu').style.display = 'none';
+      document.getElementById('board').style.display = 'table';
+
+      // Obtén una referencia al elemento de la tabla
+      var board = document.getElementById('board');
+
+      // Genera el tablero del tamaño especificado
+      for (var i = 0; i < tamaño; i++) {
+        var row = document.createElement('tr');
+        for (var j = 0; j < tamaño; j++) {
+          var cell = document.createElement('td');
+          row.appendChild(cell);
+        }
+        board.appendChild(row);
+      }
+    }
+  </script>
+</body>
+</html>
